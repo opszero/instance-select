@@ -1,58 +1,91 @@
 <html>
 
-    <head>
-        <title>instance-select by opsZero</title>
+<head>
+    <title>instance-select by opsZero</title>
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
 
-        <script>
-            $(document).ready(function () {
-                $('#data').DataTable({
-                    ajax: '/instances.json',
-                    columns: [
-                        { data: "instance-type" },
-                        { data: "arch" },
-                        { data: "memory" },
-                        { data: "vCPU" },
-                        { data: "GPU" },
-                        { data: "GPU_memory" },
-                        { data: "current-generation" },
-                        { data: "region" },
-                        { data: "ondemand" },
-                        { data: "spot_avg" },
-                    ],
-                    paging: false
-                });
+    <script>
+        $(document).ready(function () {
+            var table = $('#data').DataTable({
+                ajax: '/instances.json',
+                columns: [
+                    { data: 'instance-type' },
+                    { data: 'arch' },
+                    { data: 'memory' },
+                    { data: 'vCPU' },
+                    { data: 'GPU' },
+                    { data: 'GPU_memory' },
+                    { data: 'current-generation' },
+                    { data: 'region' },
+                    { data: 'ondemand' },
+                    { data: 'spot_avg' },
+                ],
+                paging: false,
+                scrollY: '300px',
+                scrollX: true,
+                scrollCollapse: true,
+                fixedColumns: true,
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        $('input', this.footer()).on('keyup change clear', function () {
+                            if (column.search() !== this.value) {
+                                column.search(this.value).draw();
+                            }
+                        });
+                    });
+                }
             });
-        </script>
-    </head>
+    
+            $('#data tfoot th').each(function (i) {
+                var title = $('#data thead th').eq(i).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            });
+        });
+    </script>
+    
+</head>
 
-    <body>
-        <h1>instance-select</h1>
+<body>
+    <h1>instance-select</h1>
 
-        <div id="terraform-output">
+    <div id="terraform-output">
 
-        </div>
+    </div>
 
-        <table id="data">
-            <thead>
-                <tr>
-                    <th>Instance Type</th>
-                    <th>Arch</th>
-                    <th>Memory</th>
-                    <th>CPU</th>
-                    <th>GPU</th>
-                    <th>GPU Memory</th>
-                    <th>Current Generation</th>
-                    <th>Region</th>
-                    <th>Ondemand</th>
-                    <th>Spot</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-
-    </body>
+    <table id="data">
+        <thead>
+            <tr>
+                <th>Instance Type</th>
+                <th>Arch</th>
+                <th>Memory</th>
+                <th>CPU</th>
+                <th>GPU</th>
+                <th>GPU Memory</th>
+                <th>Current Generation</th>
+                <th>Region</th>
+                <th>Ondemand</th>
+                <th>Spot</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</body>
 
 </html>
