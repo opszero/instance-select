@@ -5,6 +5,8 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.js"></script>
+        <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.dataTables.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -23,9 +25,6 @@
                     { data: 'spot_avg' },
                 ],
                 paging: false,
-                scrollY: '300px',
-                scrollX: true,
-                scrollCollapse: true,
                 fixedColumns: true,
                 initComplete: function () {
                     this.api().columns().every(function () {
@@ -39,7 +38,7 @@
                 }
             });
     
-            $('#data tfoot th').each(function (i) {
+            $('#data thead th').each(function (i) {
                 var title = $('#data thead th').eq(i).text();
                 $(this).html('<input type="text" placeholder="Search ' + title + '" />');
             });
